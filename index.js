@@ -16,7 +16,7 @@ app.get("/users", (request, response) => {
     client.query('SELECT * FROM users', (err, result) => {
         if(err) {
             response.status(500).send();
-            return console.log(`${err}. stupid server`)
+            return console.log(`${err}. stupid server.`)
         };
         response.send(result.rows);
     });
@@ -28,13 +28,26 @@ app.post("/users", (request, response) => {
     client.query(queryText, values, (err, result) => {
         if(err) {
             response.status(500).send();
-            return console.log(`${err}. stupid server`)
+            return console.log(`${err}. stupid server.`)
         };
         response.status(201).send(result.rows[0]); // have to send this stuff to the server because this is adding a new user to the db 
         console.log(result.rows[0]);
     });
 });
 
+app.get("/users/:id", (request, response) => {
+    const idValue = request.params.id; // params are used for the selfdefined parameter for receiving reqs 
+    const queryText = `SELECT * FROM users WHERE id=${idValue}`;
+    // const queryText = `SELECT id FROM users WHERE id=${idValue}`;
+    client.query(queryText, (err, result) => {
+        if(err) {
+            response.status(500).send();
+            return console.log(`${err}. stupid server.`)
+        };
+        response.status(201).send(result.rows[0]); // have to send this stuff to the server because this is adding a new user to the db 
+        console.log(result.rows[0]);
+    });
+});
 
 // strart server listens on port 3000 and conbwxrs sql clienr on success
 app.listen(port, () => {
