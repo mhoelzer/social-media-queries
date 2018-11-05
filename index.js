@@ -31,28 +31,32 @@ app.post("/users", (request, response) => {
             return console.log(`${err}. stupid server.`)
         };
         response.status(201).send(result.rows[0]); // have to send this stuff to the server because this is adding a new user to the db 
-        console.log(result.rows[0]);
+        console.log(result.rows[0]); // result.rows[0] is for the first column in the db 
     });
 });
 
 app.get("/users/:id", (request, response) => {
     const idValue = request.params.id; // params are used for the selfdefined parameter for receiving reqs 
-    const queryText = `SELECT * FROM users WHERE id=${idValue}`;
-    // const queryText = `SELECT id FROM users WHERE id=${idValue}`;
+    // const queryText = `SELECT * FROM users WHERE id=${idValue}`;
+    const queryText = `SELECT id FROM users WHERE id=${idValue}`;
     client.query(queryText, (err, result) => {
         if(err) {
             response.status(500).send();
-            return console.log(`${err}. stupid server.`)
+            return console.log(`${err}. stupid server.`);
+        };
+        if(result.rows == 0) {
+            response.status(404).send();
+            return console.log(`${err} because no user by that name was found :'(`);
         };
         response.status(201).send(result.rows[0]); // have to send this stuff to the server because this is adding a new user to the db 
         console.log(result.rows[0]);
     });
 });
 
+// sql join to get posts included 
+
 // strart server listens on port 3000 and conbwxrs sql clienr on success
 app.listen(port, () => {
     client.connect();
-    console.log(`cpnnexting pon port ${port}`)
-})
-
-// sql join to get posts included 
+    console.log(`cpnnexting pon port ${port}`);
+});
